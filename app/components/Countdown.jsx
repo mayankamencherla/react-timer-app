@@ -43,6 +43,9 @@ var Countdown = React.createClass({
         }
     },
     startTimer: function() {
+        /**
+         *  Every one second, decrease count by 1
+         */
         this.timer = setInterval(() => {
             var newCount = this.state.count - 1;
             this.setState({
