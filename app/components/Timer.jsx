@@ -10,6 +10,13 @@ var Timer = React.createClass({
             timerStatus: 'stopped'
         };
     },
+    componentWillUnmount: function() {
+        /**
+         * Clearing timer before leaving the component 
+         */
+        clearInterval(this.timer);
+        this.timer = undefined;
+    },
     componentDidUpdate: function(prevProps, prevState) {
         if (this.state.timerStatus !== prevState.timerStatus) {
             switch (this.state.timerStatus) {
