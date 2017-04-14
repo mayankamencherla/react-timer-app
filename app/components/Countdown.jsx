@@ -2,6 +2,7 @@ var React = require('react');
 
 var Clock = require('Clock');
 var CountdownForm = require('CountdownForm');
+var Controls = require('Controls');
 
 var Countdown = React.createClass({
     getInitialState: function() {
@@ -16,6 +17,21 @@ var Countdown = React.createClass({
                 case 'started': 
                     this.startTimer();
                     break;
+
+                /** 
+                 * Setting count to 0 for stopped case
+                 * And then stopping timer
+                **/
+                case 'stopped':
+                    this.setState({count: 0});
+
+                /** 
+                 * Leaving count as is and clearing the timer
+                **/
+                case 'paused':
+                    clearInterval(this.timer);
+                    this.timer = undefined;
+                    break;
             }
         }
     },
@@ -25,6 +41,13 @@ var Countdown = React.createClass({
             this.setState({
                 count: newCount >= 0 ? newCount : 0
             });
+
+            /** 
+             * If count becomes 0, set the timer as stopped
+            **/
+            if (this.state.count === 0) {
+                this.setState({countDownStatus: 'stopped'});
+            }
         }, 1000);
     },
     handleSetCountDown: function(seconds) {
@@ -33,12 +56,27 @@ var Countdown = React.createClass({
             countDownStatus: 'started',
         });
     },
+    handleStatusChange: function(newStatus) {
+        this.setState({countDownStatus: newStatus});
+    },
     render: function() {
         var {count, countDownStatus} = this.state;
+        var renderControlArea = () => {
+            if (countDownStatus !== 'stopped') {
+                return (
+                    <Controls countDownStatus={countDownStatus} onStatusChange={this.handleStatusChange} />
+                );
+            } else {
+                return (
+                    <CountdownForm onSetCountDown={this.handleSetCountDown} countDownStatus={countDownStatus} onStatusChange={this.onStatusChange} />
+                );
+            }
+        };
+
         return (
             <div>
                 <Clock totalSeconds={count} />
-                <CountdownForm onSetCountDown={this.handleSetCountDown} countDownStatus={countDownStatus} />
+                {renderControlArea()}
             </div>
         );    
     }
