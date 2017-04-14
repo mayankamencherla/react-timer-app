@@ -74,7 +74,7 @@ var Countdown = React.createClass({
         var renderControlArea = () => {
             if (countDownStatus !== 'stopped') {
                 return (
-                    <Controls countDownStatus={countDownStatus} onStatusChange={this.handleStatusChange} />
+                    <Controls countStatus={countDownStatus} onStatusChange={this.handleStatusChange} />
                 );
             } else {
                 return (
